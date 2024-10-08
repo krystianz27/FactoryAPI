@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.db
+*.sqlite3
+
+# Virtual Environment
+venv/
+env/
+.venv/
+
+# Docker
+# *.dockerignore
+# Dockerfile
+# docker-compose.yml
+# .docker/
+
+# VSCode
+.vscode/
+
+# Testy
+.coverage
+.pytest_cache/
+
+# Inne pliki
+*.env
+*.log
+*.pot
+*.mo
+*.pyc
+*.pyo
+*.pyd
+
+# SQLAlchemy Migrations
+# migrations/
+# alembic/
+
+# Pytest
+.cache
