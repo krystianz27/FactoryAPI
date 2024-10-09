@@ -5,22 +5,18 @@ from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
 from app.db_connection import SessionLocal, get_db_session
-from app.models import Category
-from app.schemas.category_schema import (
+from app.products.models import Category
+from app.products.schemas.category_schema import (
     CategoryCreate,
     CategoryDelete,
     CategoryReturn,
     CategoryUpdate,
 )
-from app.utils.category_utils import check_existing_category
+from app.products.utils.category_utils import check_existing_category
 
 router = APIRouter()
 db = SessionLocal()
 logger = logging.getLogger("app")
-
-# def get_db():
-#     with get_db_session() as db:
-#         yield db
 
 
 @router.get("/", response_model=List[CategoryReturn])
@@ -49,6 +45,25 @@ def get_category_by_slug(category_slug: str, db: Session = Depends(get_db_sessio
         raise
     except Exception as e:
         logger.error(f"Exception while retrieving category by slug: {e}")
+        raise HTTPException(status_code=500, detail="Internal server error")
+
+
+@router.get("/{category_id}", response_model=CategoryReturn)
+def get_category_by_id(category_id: int, db: Session = Depends(get_db_session)):
+    try:
+        category = db.query(Category).filter(Category.id == category_id).first()
+
+        if not category:
+            raise HTTPException(status_code=404, detail="Category does not exist")
+        return category
+
+    except HTTPException as http_excep:
+        logger.error(
+            f"Unexpected exception while retrieving category by id: {http_excep}"
+        )
+        raise
+    except Exception as e:
+        logger.error(f"Exception while retrieving category by id: {e}")
         raise HTTPException(status_code=500, detail="Internal server error")
 
 

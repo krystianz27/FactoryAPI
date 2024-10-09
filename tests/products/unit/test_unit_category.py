@@ -2,9 +2,9 @@ import pytest
 from fastapi import HTTPException
 from pydantic import ValidationError
 
-from app.models import Category
-from app.schemas.category_schema import CategoryCreate
-from tests.factories.models_factory import get_random_category_dict
+from app.products.models import Category
+from app.products.schemas.category_schema import CategoryCreate
+from tests.products.factories.models_factory import get_random_category_dict
 
 
 def mock_output(return_value=None):
@@ -122,6 +122,50 @@ def test_unit_get_single_category_with_internal_server_error(
 
 
 """
+- [ ] Test GET single category by id successfully
+"""
+
+
+@pytest.mark.parametrize("category", [get_random_category_dict() for _ in range(3)])
+def test_unit_get_single_category_by_id_successfully(client, monkeypatch, category):
+    monkeypatch.setattr("sqlalchemy.orm.Query.first", mock_output(category))
+    response = client.get(f"api/category/{category['id']}")
+    assert response.status_code == 200
+    assert response.json() == category
+
+
+"""
+- [ ] Test GET single category by id not found
+"""
+
+
+@pytest.mark.parametrize("category", [get_random_category_dict() for _ in range(3)])
+def test_unit_get_single_category_by_id_not_found(client, monkeypatch, category):
+    monkeypatch.setattr("sqlalchemy.orm.Query.first", mock_output())
+    response = client.get(f"api/category/{category['id']}")
+    assert response.status_code == 404
+    assert response.json() == {"detail": "Category does not exist"}
+
+
+"""
+- [ ] Test GET single category by id internal server error
+"""
+
+
+@pytest.mark.parametrize("category", [get_random_category_dict() for _ in range(3)])
+def test_unit_get_single_category_by_id_with_internal_server_error(
+    client, monkeypatch, category
+):
+    # Mock an exception to simulate an internal server error
+    def mock_create_category_exception(*args, **kwargs):
+        raise Exception("Internal server error")
+
+    monkeypatch.setattr("sqlalchemy.orm.Query.first", mock_create_category_exception)
+    response = client.get(f"api/category/{category['id']}")
+    assert response.status_code == 500
+
+
+"""
 - [ ] Test POST new category successfully
 """
 
@@ -165,7 +209,7 @@ def test_unit_create_new_category_existing(
             raise HTTPException(status_code=400, detail=expected_detail)
 
     monkeypatch.setattr(
-        "app.routers.category_routes.check_existing_category",
+        "app.products.routers.category_routes.check_existing_category",
         mock_check_existing_category,
     )
 

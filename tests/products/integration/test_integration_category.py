@@ -1,5 +1,5 @@
-from app.models import Category
-from tests.factories.models_factory import get_random_category_dict
+from app.products.models import Category
+from tests.products.factories.models_factory import get_random_category_dict
 
 """Test POST new category successfully"""
 

@@ -1,8 +1,8 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
-from app.models import Category
-from app.schemas.category_schema import CategoryCreate
+from app.products.models import Category
+from app.products.schemas.category_schema import CategoryCreate
 
 
 def check_existing_category(db: Session, category_data: CategoryCreate):

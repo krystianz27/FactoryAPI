@@ -16,7 +16,7 @@ from sqlalchemy import (
 )
 from sqlalchemy.dialects.postgresql import UUID
 
-from .db_connection import Base
+from app.db_connection import Base
 
 
 class Category(Base):
@@ -26,7 +26,7 @@ class Category(Base):
     name = Column(String(100), nullable=False)
     slug = Column(String(120), nullable=False)
     is_active = Column(Boolean, nullable=False, default=False, server_default="False")
-    level = Column(Integer, nullable=False, default="100", server_default="100")
+    level = Column(Integer, nullable=False, default=100, server_default="100")
     parent_id = Column(Integer, ForeignKey("category.id"), nullable=True)
 
     __table_args__ = (

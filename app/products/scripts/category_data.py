@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 
-from app.models import Category
+from app.products.models import Category
 
 
 def add_sample_categories(db: Session):

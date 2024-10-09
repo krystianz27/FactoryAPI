@@ -4,7 +4,9 @@ from logging.config import fileConfig
 from sqlalchemy import engine_from_config, pool
 
 from alembic import context
-from app import models
+from app.db_connection import Base  # noqa: F401
+from app.products import models as product_models  # noqa: F401
+from app.users import models as user_models  # noqa: F401
 
 config = context.config
 
@@ -16,7 +18,9 @@ config.set_section_option(
     "testdb", "sqlalchemy.url", os.environ.get("TEST_DATABASE_URL")
 )
 
-target_metadata = models.Base.metadata
+# target_metadata = MetaData()
+
+target_metadata = Base.metadata
 
 
 def run_migrations_offline() -> None:
@@ -66,4 +70,5 @@ def run_migrations_online() -> None:
 if context.is_offline_mode():
     run_migrations_offline()
 else:
+    run_migrations_online()
     run_migrations_online()

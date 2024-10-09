@@ -1,5 +1,5 @@
 from app.db_connection import get_db_session
-from app.scripts.category_data import add_sample_categories
+from app.products.scripts.category_data import add_sample_categories
 
 # from app.scripts.product_data import add_sample_products
 # from app.scripts.product_line_data import add_sample_product_lines
